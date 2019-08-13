@@ -1,4 +1,6 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+
 import { PrimaryButton } from './Buttons';
 
 class AppHeader extends React.Component {
@@ -11,25 +13,33 @@ class AppHeader extends React.Component {
   };
 
   handleInputTextChange = event => {
-    const value = event.target.value;
-    for (let char of value) {
-      if ('0123456789'.indexOf(char) === -1) {
-        event.target.value = value.slice(0, value.length - 1);
-        return;
+    const inputtedString = event.target.value;
+    if (inputtedString) {
+      const valuesArray = inputtedString.match(/\d/g);
+      let valueString = '';
+      if (valuesArray) {
+        valueString = valuesArray.join('');
+        this.setState({ value: valueString });
       }
+      event.target.value = valueString;
+    } else {
+      this.setState({ value: '' });
     }
-    this.setState({ value });
   };
 
   render() {
     return (
-      <div className="app-header">
+      <div className='app-header'>
         Данные
-        <input type="text" onChange={this.handleInputTextChange} />
-        <PrimaryButton onClick={this.handleAddNewValue} label="Добавить" />
+        <input type='text' onChange={this.handleInputTextChange} />
+        <PrimaryButton handleClick={this.handleAddNewValue} label='Добавить' />
       </div>
     );
   }
 }
+
+AppHeader.propTypes = {
+  onAddNewValue: PropTypes.func.isRequired,
+};
 
 export default AppHeader;

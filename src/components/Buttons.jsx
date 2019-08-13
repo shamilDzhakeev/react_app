@@ -1,8 +1,9 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 export function PrimaryButton(props) {
   return (
-    <button className='primary' onClick={props.onClick}>
+    <button className='primary' onClick={props.handleClick}>
       {props.label}
     </button>
   );
@@ -15,3 +16,12 @@ export function CloseButton(props) {
     </button>
   );
 }
+
+PrimaryButton.propTypes = {
+  handleClick: PropTypes.func.isRequired,
+  label: PropTypes.string,
+};
+
+CloseButton.propTypes = {
+  handleClick: PropTypes.func.isRequired,
+};

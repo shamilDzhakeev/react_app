@@ -5,28 +5,6 @@ import AppBody from './AppBody';
 import Sorter from './Sorter';
 import '../styles.css';
 
-/* state shape:
-
-state = {
-  uniqID: 0,
-  totalStepsCount:0,
-  sorters: [
-    {
-      id: n,
-      sorterValue: [],
-      sorterObject: {}
-    },
-
-    {
-      id: n,
-      sorterValue: [],
-      sorterObject: {}
-    }
-  ]
-}
-
-*/
-
 class App extends React.Component {
   state = {
     uniqueID: 0,
@@ -35,7 +13,7 @@ class App extends React.Component {
   };
 
   handleAddNewValue = value => {
-    if (value !== '') {
+    if (value) {
       const valuesArray = value.split('').map(Number);
       this.setState({
         sorters: [
@@ -47,38 +25,40 @@ class App extends React.Component {
     }
   };
 
+  handleDeleteSorter = id => {
+    this.setState({
+      sorters: this.state.sorters.filter(sorter => !(sorter.id === id)),
+    });
+  };
+
   handleStepBackOnSorter = sorterID => {
-    this.setState((prevState, props) => {
-      return {
-        totalStepsCount: prevState.totalStepsCount - 1,
-        sorters: prevState.sorters.map(sorter => {
-          if (sorter.id === sorterID) {
-            const newValue = sorter.sorterObject.doStepBack();
-            return Object.assign({}, sorter, { sorterValue: newValue });
-          }
-          return sorter;
-        }),
-      };
+    this.setState({
+      totalStepsCount: this.state.totalStepsCount - 1,
+      sorters: this.state.sorters.map(sorter => {
+        if (sorter.id === sorterID) {
+          const newValue = sorter.sorterObject.doStepBack();
+          return Object.assign({}, sorter, { sorterValue: newValue });
+        }
+        return sorter;
+      }),
     });
   };
 
   handleStepUpOnSorter = sorterID => {
-    this.setState((prevState, props) => {
-      return {
-        totalStepsCount: prevState.totalStepsCount + 1,
-        sorters: prevState.sorters.map(sorter => {
-          if (sorter.id === sorterID) {
-            const newValue = sorter.sorterObject.doStepUp();
-            return Object.assign({}, sorter, { sorterValue: newValue });
-          }
-          return sorter;
-        }),
-      };
+    this.setState({
+      totalStepsCount: this.state.totalStepsCount + 1,
+      sorters: this.state.sorters.map(sorter => {
+        if (sorter.id === sorterID) {
+          const newValue = sorter.sorterObject.doStepUp();
+          return Object.assign({}, sorter, { sorterValue: newValue });
+        }
+        return sorter;
+      }),
     });
   };
 
   render() {
-    const onSorterSteps = {
+    const onSorterStepsMethods = {
       handleStepBackOnSorter: this.handleStepBackOnSorter,
       handleStepUpOnSorter: this.handleStepUpOnSorter,
     };
@@ -86,7 +66,8 @@ class App extends React.Component {
       <div className='app'>
         <AppHeader onAddNewValue={this.handleAddNewValue} />
         <AppBody
-          onSorterSteps={onSorterSteps}
+          onSorterSteps={onSorterStepsMethods}
+          onSorterClose={this.handleDeleteSorter}
           sorters={this.state.sorters}
           totalStepsCount={this.state.totalStepsCount}
         />

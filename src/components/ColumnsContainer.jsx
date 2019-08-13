@@ -1,4 +1,6 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+
 import Column from './Column';
 
 export default function ColumnsContainer(props) {
@@ -7,8 +9,16 @@ export default function ColumnsContainer(props) {
   return (
     <div className='sorter-container'>
       {sorter.sorterValue.map((value, index) => {
-        return <Column key={index} color='white' value={value} index={index} spacing={30} />;
+        return <Column key={index} color='white' value={value} index={index} />;
       })}
     </div>
   );
 }
+
+ColumnsContainer.propTypes = {
+  sorter: PropTypes.shape({
+    id: PropTypes.number,
+    sorterValue: PropTypes.arrayOf(PropTypes.number),
+    sorterObject: PropTypes.object,
+  }),
+};
